@@ -11,6 +11,7 @@ setup(
     version='0.0.1',
     description="Plotting tools for journal quality figures",
     url="https://github.com/malihass/paperPlot",
+    author="Malik Hassanaly",
     license="BSD 3-Clause",
     package_dir={"paperPlot": "paperPlot"},
     classifiers=[
