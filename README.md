@@ -1,3 +1,3 @@
-# Paper plot
+# Pretty plot
 
 Plots with journal quality
