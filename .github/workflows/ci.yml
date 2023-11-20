@@ -38,7 +38,7 @@ jobs:
         run: |
           source .github/linters/formatting.sh
           format paperPlot true
-          format test true
+          format tests true
           codespell
   Test:
     runs-on: ubuntu-latest
