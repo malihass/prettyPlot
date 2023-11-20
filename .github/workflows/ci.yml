@@ -1,4 +1,4 @@
-name: paperPlot-CI
+name: prettyPlot-CI
 
 on:
    push:
@@ -37,7 +37,7 @@ jobs:
       - name: Formatting and sorting import
         run: |
           source .github/linters/formatting.sh
-          format paperPlot true
+          format prettyPlot true
           format tests true
           codespell
   Test:
