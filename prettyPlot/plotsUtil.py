@@ -6,27 +6,38 @@ from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-def prettyLabels(xlabel, ylabel, fontsize, title=None):
-    plt.xlabel(
+def prettyLabels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
+    if ax is None:
+        ax = plt.gca()
+
+    ax.set_xlabel(
         xlabel,
         fontsize=fontsize,
         fontweight="bold",
         fontname="Times New Roman",
     )
-    plt.ylabel(
+    ax.set_ylabel(
         ylabel,
         fontsize=fontsize,
         fontweight="bold",
         fontname="Times New Roman",
     )
     if not title == None:
-        plt.title(
+        ax.set_title(
             title,
             fontsize=fontsize,
             fontweight="bold",
             fontname="Times New Roman",
         )
-    ax = plt.gca()
+
+    ax.yaxis.get_offset_text().set_fontsize(fontsize)
+    ax.yaxis.get_offset_text().set_fontweight("bold")
+    ax.yaxis.get_offset_text().set_fontname("Times New Roman")
+
+    ax.xaxis.get_offset_text().set_fontsize(fontsize)
+    ax.xaxis.get_offset_text().set_fontweight("bold")
+    ax.xaxis.get_offset_text().set_fontname("Times New Roman")
+
     for tick in ax.xaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
         tick.label1.set_fontname("Times New Roman")
@@ -38,7 +49,10 @@ def prettyLabels(xlabel, ylabel, fontsize, title=None):
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
         ax.spines[axis].set_color("black")
-    plt.grid(color="k", linestyle="-", linewidth=0.5)
+
+    if grid:
+        ax.grid(color="k", linestyle="-", linewidth=0.5)
+
     try:
         plt.tight_layout()
     except:
@@ -46,13 +60,14 @@ def prettyLabels(xlabel, ylabel, fontsize, title=None):
         pass
 
 
-def plotLegend():
-    fontsize = 16
-    plt.legend()
-    leg = plt.legend(
+def plotLegend(ax=None, fontsize=13):
+    if ax is None:
+        ax = plt.gca()
+
+    leg = ax.legend(
         prop={
             "family": "Times New Roman",
-            "size": fontsize - 3,
+            "size": fontsize,
             "weight": "bold",
         }
     )
@@ -130,7 +145,7 @@ def plotContour(x, y, z, color):
     return h[0]
 
 
-def plotActiveSubspace(paramName, W, title=None):
+def plotActiveSubspace(paramName, W, title=None, grid=True):
     x = []
     for i, name in enumerate(paramName):
         x.append(i)
@@ -164,65 +179,13 @@ def plotActiveSubspace(paramName, W, title=None):
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
         ax.spines[axis].set_color("black")
-    plt.grid(color="k", linestyle="-", linewidth=0.5)
+    if grid:
+        plt.grid(color="k", linestyle="-", linewidth=0.5)
     try:
         plt.tight_layout()
     except:
         print("Could not call tight_layout")
         pass
-
-
-def axprettyLabels(ax, xlabel, ylabel, fontsize, title=None):
-    ax.set_xlabel(
-        xlabel,
-        fontsize=fontsize,
-        fontweight="bold",
-        fontname="Times New Roman",
-    )
-    ax.set_ylabel(
-        ylabel,
-        fontsize=fontsize,
-        fontweight="bold",
-        fontname="Times New Roman",
-    )
-    if not title == None:
-        ax.set_title(
-            title,
-            fontsize=fontsize,
-            fontweight="bold",
-            fontname="Times New Roman",
-        )
-    for tick in ax.xaxis.get_major_ticks():
-        tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
-        tick.label1.set_fontweight("bold")
-    for tick in ax.yaxis.get_major_ticks():
-        tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
-        tick.label1.set_fontweight("bold")
-    for axis in ["top", "bottom", "left", "right"]:
-        ax.spines[axis].set_linewidth(2)
-        ax.spines[axis].set_color("black")
-    ax.grid(color="k", linestyle="-", linewidth=0.5)
-    try:
-        plt.tight_layout()
-    except:
-        print("Could not call tight_layout")
-        pass
-
-
-def axplotLegend(ax):
-    fontsize = 16
-    ax.legend()
-    leg = ax.legend(
-        prop={
-            "family": "Times New Roman",
-            "size": fontsize - 3,
-            "weight": "bold",
-        }
-    )
-    leg.get_frame().set_linewidth(2.0)
-    leg.get_frame().set_edgecolor("k")
 
 
 def plotTrainingLogs(trainingLoss, validationLoss):
@@ -297,20 +260,20 @@ def plot_fromLatentToData(model, nSamples, xfeat=None, yfeat=None):
     axes[0].plot(
         samples[:, xfeat], samples[:, yfeat], "o", markersize=3, color="k"
     )
-    axprettyLabels(
-        axes[0],
+    prettyLabels(
         "feature " + str(xfeat),
         "feature " + str(yfeat),
         14,
         title="Prior",
+        ax=axes[0],
     )
     axes[1].plot(x[:, xfeat], x[:, yfeat], "o", markersize=3, color="k")
-    axprettyLabels(
-        axes[1],
+    prettyLabels(
         "feature " + str(xfeat),
         "feature " + str(yfeat),
         14,
         title="Generated",
+        ax=axes[1],
     )
 
 
