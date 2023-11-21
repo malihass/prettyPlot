@@ -6,7 +6,7 @@ from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-def prettyLabels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
+def pretty_labels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
     if ax is None:
         ax = plt.gca()
 
@@ -60,7 +60,7 @@ def prettyLabels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
         pass
 
 
-def plotLegend(ax=None, fontsize=13):
+def plot_legend(ax=None, fontsize=13):
     if ax is None:
         ax = plt.gca()
 
@@ -85,7 +85,7 @@ def snapVizZslice(field, x, y, figureDir, figureName, title=None):
         vmax=np.amax(field),
         extent=[np.amin(x), np.amax(x), np.amax(y), np.amin(y)],
     )
-    prettyLabels("x [m]", "y [m]", 16, title)
+    pretty_labels("x [m]", "y [m]", 16, title)
     plt.colorbar()
     fig.savefig(figureDir + "/" + figureName)
     plt.close(fig)
@@ -107,7 +107,7 @@ def movieVizZslice(field, x, y, itime, movieDir, minVal=None, maxVal=None):
         vmax=maxVal,
         extent=[np.amin(x), np.amax(x), np.amax(y), np.amin(y)],
     )
-    prettyLabels("x [m]", "y [m]", 16, "Snap Id = " + str(itime))
+    pretty_labels("x [m]", "y [m]", 16, "Snap Id = " + str(itime))
     plt.colorbar()
     fig.savefig(movieDir + "/im_" + str(itime) + ".png")
     plt.close(fig)
@@ -131,7 +131,7 @@ def plotHist(field, xLabel, folder, filename):
     fig = plt.figure()
     plt.hist(field)
     fontsize = 18
-    prettyLabels(xLabel, "bin count", fontsize)
+    pretty_labels(xLabel, "bin count", fontsize)
     fig.savefig(folder + "/" + filename)
 
 
@@ -192,8 +192,8 @@ def plotTrainingLogs(trainingLoss, validationLoss):
     fig = plt.figure()
     plt.plot(trainingLoss, color="k", linewidth=3, label="train")
     plt.plot(validationLoss, "--", color="k", linewidth=3, label="test")
-    prettyLabels("epoch", "loss", 14, title="model loss")
-    plotLegend()
+    pretty_labels("epoch", "loss", 14, title="model loss")
+    plot_legend()
 
 
 def plotScatter(
@@ -207,9 +207,9 @@ def plotScatter(
 
     plt.plot(dataX[0::freq], dataY[0::freq], "o", color="k", markersize=3)
     if title is None:
-        prettyLabels("", "", fontSize)
+        pretty_labels("", "", fontSize)
     else:
-        prettyLabels("", "", fontSize, title=title)
+        pretty_labels("", "", fontSize, title=title)
 
 
 def plot_probabilityMapDouble2D(
@@ -243,7 +243,7 @@ def plot_probabilityMapDouble2D(
     )
     plt.gca().invert_yaxis()
     plt.colorbar()
-    prettyLabels(
+    pretty_labels(
         "1st label", "2nd label", 20, title="Approximate Probability Map"
     )
 
@@ -260,7 +260,7 @@ def plot_fromLatentToData(model, nSamples, xfeat=None, yfeat=None):
     axes[0].plot(
         samples[:, xfeat], samples[:, yfeat], "o", markersize=3, color="k"
     )
-    prettyLabels(
+    pretty_labels(
         "feature " + str(xfeat),
         "feature " + str(yfeat),
         14,
@@ -268,7 +268,7 @@ def plot_fromLatentToData(model, nSamples, xfeat=None, yfeat=None):
         ax=axes[0],
     )
     axes[1].plot(x[:, xfeat], x[:, yfeat], "o", markersize=3, color="k")
-    prettyLabels(
+    pretty_labels(
         "feature " + str(xfeat),
         "feature " + str(yfeat),
         14,
@@ -337,7 +337,7 @@ def pretty_bar_plot(
             ylabel = ""
         if title is None:
             title = ""
-        prettyLabels("", ylabel, title=title, fontsize=fontsize)
+        pretty_labels("", ylabel, title=title, fontsize=fontsize)
         ax = plt.gca()
         ax.set_xticks(x, xlabel1)
 
@@ -468,7 +468,7 @@ def pretty_bar_plot(
             ylabel = ""
         if title is None:
             title = ""
-        prettyLabels("", ylabel, title=title, fontsize=fontsize)
+        pretty_labels("", ylabel, title=title, fontsize=fontsize)
         ax.set_xticks(x + width, xlabel1)
 
         for tick in ax.xaxis.get_major_ticks():
@@ -484,7 +484,7 @@ def pretty_bar_plot(
             ax.spines[axis].set_color("black")
 
         if len(xlabel2) > 1:
-            plotLegend()
+            plot_legend()
         if ylim is not None:
             ax.set_ylim(ylim[0], ylim[1])
 
@@ -544,8 +544,8 @@ def line_cs_results(
             label=f"t = {stamp}s",
         )
 
-    plotLegend()
-    prettyLabels(xlabel, ylabel, 14, title=title)
+    plot_legend()
+    pretty_labels(xlabel, ylabel, 14, title=title)
     if not verbose and file_path_name is not None:
         plt.savefig(file_path_name)
         plt.close()
@@ -588,8 +588,8 @@ def line_phi_results(
         label=r"$\phi_{s,c}$",
     )
 
-    plotLegend()
-    prettyLabels(xlabel, ylabel, 14, title=title)
+    plot_legend()
+    pretty_labels(xlabel, ylabel, 14, title=title)
     if not verbose and file_path_name is not None:
         plt.savefig(file_path_name)
         plt.close()
