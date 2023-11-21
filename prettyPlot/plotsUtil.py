@@ -60,7 +60,7 @@ def pretty_labels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
         pass
 
 
-def plot_legend(ax=None, fontsize=13):
+def pretty_legend(ax=None, fontsize=13):
     if ax is None:
         ax = plt.gca()
 
@@ -114,7 +114,7 @@ def movieVizZslice(field, x, y, itime, movieDir, minVal=None, maxVal=None):
     return 0
 
 
-def makeMovie(ntime, movieDir, movieName, prefix="im_"):
+def make_movie(ntime, movieDir, movieName, prefix="im_"):
     fig = plt.figure()
     # initiate an empty  list of "plotted" images
     myimages = []
@@ -127,7 +127,7 @@ def makeMovie(ntime, movieDir, movieName, prefix="im_"):
     return
 
 
-def plotHist(field, xLabel, folder, filename):
+def plot_hist(field, xLabel, folder, filename):
     fig = plt.figure()
     plt.hist(field)
     fontsize = 18
@@ -135,7 +135,7 @@ def plotHist(field, xLabel, folder, filename):
     fig.savefig(folder + "/" + filename)
 
 
-def plotContour(x, y, z, color):
+def plot_contour(x, y, z, color):
     ax = plt.gca()
     X, Y = np.meshgrid(x, y)
     CS = ax.contour(
@@ -193,7 +193,7 @@ def plotTrainingLogs(trainingLoss, validationLoss):
     plt.plot(trainingLoss, color="k", linewidth=3, label="train")
     plt.plot(validationLoss, "--", color="k", linewidth=3, label="test")
     pretty_labels("epoch", "loss", 14, title="model loss")
-    plot_legend()
+    pretty_legend()
 
 
 def plotScatter(
@@ -484,112 +484,6 @@ def pretty_bar_plot(
             ax.spines[axis].set_color("black")
 
         if len(xlabel2) > 1:
-            plot_legend()
+            pretty_legend()
         if ylim is not None:
             ax.set_ylim(ylim[0], ylim[1])
-
-
-def line_cs_results(
-    temp_pred,
-    spac_pred,
-    field_pred,
-    time_stamps=[0, 200, 400],
-    xlabel="",
-    ylabel="",
-    title=None,
-    file_path_name=None,
-    temp_dat=None,
-    spac_dat=None,
-    field_dat=None,
-    verbose=False,
-):
-    plot_data = True
-    if temp_dat is None or spac_dat is None or field_dat is None:
-        plot_data = False
-
-    if time_stamps is None or len(time_stamps) < 1:
-        time_stamps = [0]
-
-    # Line color
-    color_stamp = []
-    n_stamp = len(time_stamps)
-    for istamp, stamp in enumerate(time_stamps):
-        color_stamp.append(str(istamp * 0.6 / (n_stamp - 1)))
-
-    # Find closest time to stamps
-    ind_stamp_pred = []
-    ind_stamp_dat = []
-    for stamp in time_stamps:
-        ind_stamp_pred.append(np.argmin(abs(temp_pred - float(stamp))))
-        if plot_data:
-            ind_stamp_dat.append(np.argmin(abs(temp_dat - float(stamp))))
-
-    fig = plt.figure()
-    if plot_data:
-        for istamp in range(len(time_stamps)):
-            plt.plot(
-                spac_dat * 1e6,
-                field_dat[ind_stamp_dat[istamp], :],
-                "-.",
-                linewidth=3,
-                color=color_stamp[istamp],
-            )
-
-    for istamp, stamp in enumerate(time_stamps):
-        plt.plot(
-            spac_pred * 1e6,
-            field_pred[ind_stamp_pred[istamp], :],
-            linewidth=3,
-            color=color_stamp[istamp],
-            label=f"t = {stamp}s",
-        )
-
-    plot_legend()
-    pretty_labels(xlabel, ylabel, 14, title=title)
-    if not verbose and file_path_name is not None:
-        plt.savefig(file_path_name)
-        plt.close()
-
-
-def line_phi_results(
-    temp_pred,
-    field_phie_pred,
-    field_phis_c_pred,
-    xlabel="time (s)",
-    ylabel="(V)",
-    title=None,
-    file_path_name=None,
-    temp_dat=None,
-    field_phie_dat=None,
-    field_phis_c_dat=None,
-    verbose=False,
-):
-    plot_data = True
-    if temp_dat is None or field_phie_dat is None or field_phis_c_dat is None:
-        plot_data = False
-
-    fig = plt.figure()
-    if plot_data:
-        plt.plot(temp_dat, field_phie_dat, "-.", linewidth=3, color="b")
-        plt.plot(temp_dat, field_phis_c_dat, "-.", linewidth=3, color="k")
-
-    plt.plot(
-        temp_pred,
-        field_phie_pred,
-        linewidth=3,
-        color="b",
-        label=r"$\phi_{e}$",
-    )
-    plt.plot(
-        temp_pred,
-        field_phis_c_pred,
-        linewidth=3,
-        color="k",
-        label=r"$\phi_{s,c}$",
-    )
-
-    plot_legend()
-    pretty_labels(xlabel, ylabel, 14, title=title)
-    if not verbose and file_path_name is not None:
-        plt.savefig(file_path_name)
-        plt.close()
