@@ -17,4 +17,6 @@ setup(
     ],
     python_requires='>=3.10',
     install_requires=["numpy","matplotlib", "imageio"],
+    package_data={'prettyPlot': ['Times-Roman.afm']},
+    include_package_data=True,
 )
