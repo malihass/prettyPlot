@@ -17,4 +17,4 @@ def test_1d(verbose=False):
 
 
 if __name__ == "__main__":
-    test_1d(True)
+    test_1d()

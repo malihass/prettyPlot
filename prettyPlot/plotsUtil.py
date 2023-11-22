@@ -1,9 +1,21 @@
+import os
+
 import imageio
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import cm
+from matplotlib import cm, font_manager
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+from prettyPlot import PRETTY_PLOT_DIR
+
+
+def set_font(fontpath=os.path.join(PRETTY_PLOT_DIR, "fonts")):
+    font_manager.fontManager.addfont(os.path.join(fontpath, "Times-Roman.afm"))
+    prop = font_manager.FontProperties(fname=fontpath)
+
+
+set_font()
 
 
 def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
