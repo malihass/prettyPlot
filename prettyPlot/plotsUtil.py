@@ -366,7 +366,7 @@ def pretty_bar_plot(
             ax.set_ylim(ylim[0], ylim[1])
 
 
-def plot_multi_contour(
+def pretty_multi_contour(
     listDatax,
     listData,
     ybound,
