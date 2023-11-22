@@ -60,7 +60,7 @@ def pretty_labels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
         pass
 
 
-def pretty_legend(ax=None, fontsize=13):
+def pretty_legend(ax=None, fontsize=13, loc="best"):
     if ax is None:
         ax = plt.gca()
 
@@ -69,10 +69,434 @@ def pretty_legend(ax=None, fontsize=13):
             "family": "Times New Roman",
             "size": fontsize,
             "weight": "bold",
-        }
+        },
+        loc=loc,
     )
     leg.get_frame().set_linewidth(2.0)
     leg.get_frame().set_edgecolor("k")
+
+
+def pretty_suplabels(
+    xlabel=None,
+    ylabel=None,
+    title=None,
+    adjust_top=None,
+    adjust_left=None,
+    adjust_right=None,
+    adjust_bottom=None,
+    fontsize=14,
+):
+    """Make pretty sup labels for plots
+
+    Parameters
+    ----------
+    xlabel : str
+        label for x abscissa
+    ylabel : str
+        label for y abscissa
+    fontsize : int, optional
+        size of the plot font, by default 14
+    title : str, optional
+        plot title, by default None
+    adjust_top : float, optional
+        where starts the top of the plot
+        Useful to handle label overlap
+    adjust_left : float, optional
+        where starts the left of the plot
+        Useful to handle label overlap
+    adjust_bottom : float, optional
+        where starts the bottom of plot
+        Useful to handle label overlap
+    """
+    ax = plt.gcf()
+    if xlabel is not None:
+        ax.supxlabel(
+            xlabel,
+            fontsize=fontsize,
+            fontweight="bold",
+            fontname="Times New Roman",
+        )
+    if ylabel is not None:
+        ax.supylabel(
+            ylabel,
+            fontsize=fontsize,
+            fontweight="bold",
+            fontname="Times New Roman",
+        )
+    if title is not None:
+        ax.suptitle(
+            title,
+            fontsize=fontsize,
+            fontweight="bold",
+            fontname="Times New Roman",
+        )
+
+    if (
+        adjust_top is not None
+        or adjust_left is not None
+        or adjust_right is not None
+        or adjust_bottom is not None
+    ):
+        ax.subplots_adjust(
+            top=adjust_top,
+            left=adjust_left,
+            right=adjust_right,
+            bottom=adjust_bottom,
+        )
+
+
+def pretty_bar_plot(
+    xlabel1,
+    yval,
+    xlabel2=None,
+    yerr=None,
+    ymed=None,
+    yerr_lower=None,
+    yerr_upper=None,
+    title=None,
+    ylabel=None,
+    bar_color=None,
+    width=0.4,
+    ylim=None,
+    fontsize=14,
+    figsize=None,
+    loc="best",
+    grid=True,
+):
+    if ylim is not None:
+        assert len(ylim) == 2
+
+    if xlabel2 is None:
+        assert len(xlabel1) == len(yval)
+        if yerr is not None:
+            assert len(xlabel1) == len(yerr)
+
+        if figsize is None:
+            figsize = (len(xlabel1) * 2, 6)
+
+        fig = plt.figure(figsize=figsize)
+        x = range(len(xlabel1))
+
+        if bar_color is None:
+            plt.bar(x, yval, width=width, align="center")
+        else:
+            plt.bar(x, yval, width=width, align="center", color=bar_color)
+        if yerr is not None:
+            plt.errorbar(
+                x,
+                yval,
+                yerr,
+                barsabove=True,
+                capsize=5,
+                elinewidth=3,
+                fmt="none",
+                color="k",
+            )
+        if (
+            yerr_lower is not None
+            and yerr_upper is not None
+            and ymed is not None
+        ):
+            plt.errorbar(
+                x,
+                ymed,
+                np.array(list(zip(yerr_lower, yerr_upper))).T,
+                barsabove=True,
+                capsize=5,
+                elinewidth=3,
+                fmt="none",
+                color="k",
+            )
+        if ylabel is None:
+            ylabel = ""
+        if title is None:
+            title = ""
+        pretty_labels("", ylabel, title=title, fontsize=fontsize, grid=grid)
+        ax = plt.gca()
+        ax.set_xticks(x, xlabel1)
+
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontweight("bold")
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontweight("bold")
+        for axis in ["top", "bottom", "left", "right"]:
+            ax.spines[axis].set_linewidth(2)
+            ax.spines[axis].set_color("black")
+        if ylim is not None:
+            ax.set_ylim(ylim[0], ylim[1])
+
+    else:
+        # check yval
+        assert len(yval) == len(xlabel2)
+        assert len(yval[xlabel2[0]]) == len(xlabel1)
+
+        if yerr is not None:
+            assert len(yerr) == len(xlabel2)
+            assert len(yerr[xlabel2[0]]) == len(xlabel1)
+        elif (
+            yerr_lower is not None
+            and yerr_upper is not None
+            and ymed is not None
+        ):
+            assert len(yerr_lower) == len(xlabel2)
+            assert len(yerr_upper) == len(xlabel2)
+            assert len(ymed) == len(xlabel2)
+            assert len(yerr_lower[xlabel2[0]]) == len(xlabel1)
+            assert len(yerr_upper[xlabel2[0]]) == len(xlabel1)
+            assert len(ymed[xlabel2[0]]) == len(xlabel1)
+
+        x = np.arange(len(xlabel1))  # the label locations
+        width = width / len(xlabel2)  # the width of the bars
+        multiplier = 0
+
+        if figsize is None:
+            figsize = (len(xlabel1) * 2, 6)
+        fig, ax = plt.subplots(figsize=figsize)
+
+        if yerr is not None:
+            for (lab2, measurement), (lab2, measurement_err) in zip(
+                yval.items(), yerr.items()
+            ):
+                offset = width * multiplier
+                if bar_color is None:
+                    rects = ax.bar(x + offset, measurement, width, label=lab2)
+                else:
+                    rects = ax.bar(
+                        x + offset,
+                        measurement,
+                        width,
+                        label=lab2,
+                        color=bar_color,
+                    )
+                ax.errorbar(
+                    x + offset,
+                    measurement,
+                    yerr=measurement_err,
+                    barsabove=True,
+                    capsize=5,
+                    elinewidth=3,
+                    fmt="none",
+                    color="k",
+                )
+                multiplier += 1
+
+        elif (
+            yerr_lower is not None
+            and yerr_upper is not None
+            and ymed is not None
+        ):
+            for (
+                (lab2, measurement),
+                (lab2, measurement_err_lo),
+                (lab2, measurement_err_hi),
+                (lab2, measurement_med),
+            ) in zip(
+                yval.items(),
+                yerr_lower.items(),
+                yerr_upper.items(),
+                ymed.items(),
+            ):
+                offset = width * multiplier
+                if bar_color is None:
+                    rects = ax.bar(x + offset, measurement, width, label=lab2)
+                else:
+                    rects = ax.bar(
+                        x + offset,
+                        measurement,
+                        width,
+                        label=lab2,
+                        color=bar_color[xlabel2.index(lab2)],
+                    )
+                multiplier += 1
+                ax.errorbar(
+                    x + offset,
+                    measurement_med,
+                    np.array(
+                        list(zip(measurement_err_lo, measurement_err_hi))
+                    ).T,
+                    barsabove=True,
+                    capsize=5,
+                    elinewidth=3,
+                    fmt="none",
+                    color="k",
+                )
+
+        else:
+            for lab2, measurement in yval.items():
+                offset = width * multiplier
+                if bar_color is None:
+                    rects = ax.bar(x + offset, measurement, width, label=lab2)
+                else:
+                    rects = ax.bar(
+                        x + offset,
+                        measurement,
+                        width,
+                        label=lab2,
+                        color=bar_color,
+                    )
+                multiplier += 1
+
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        if ylabel is None:
+            ylabel = ""
+        if title is None:
+            title = ""
+        pretty_labels("", ylabel, title=title, fontsize=fontsize, grid=grid)
+        ax.set_xticks(x + width, xlabel1)
+
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontweight("bold")
+        for tick in ax.yaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontweight("bold")
+        for axis in ["top", "bottom", "left", "right"]:
+            ax.spines[axis].set_linewidth(2)
+            ax.spines[axis].set_color("black")
+
+        if len(xlabel2) > 1:
+            pretty_legend(fontsize=fontsize)
+        if ylim is not None:
+            ax.set_ylim(ylim[0], ylim[1])
+
+
+def plot_multi_contour(
+    listDatax,
+    listData,
+    listCBLabel,
+    listTitle,
+    ybound,
+    xbound=None,
+    listXAxisName=None,
+    listYAxisName=None,
+    vminList=None,
+    vmaxList=None,
+    globalTitle=None,
+    fontsize=12,
+    interp="bicubic",
+    xticks=None,
+    yticks=None,
+    figsize=None,
+    grid=False,
+):
+    lim = -1
+    lim_vmax_t = -1
+    lim_vmax_x = -1
+    lim_plot = -1
+    if figsize is None:
+        figsize = (len(listData) * 3, 4)
+    fig, axs = plt.subplots(1, len(listData), figsize=figsize)
+
+    for i_dat in range(len(listData)):
+        data = listData[i_dat]
+        data_x = np.squeeze(listDatax[i_dat])
+        if vminList == None:
+            vmin = np.nanmin(data[:lim, :])
+        else:
+            vmin = vminList[i_dat]
+        if vmaxList == None:
+            vmax = np.nanmax(data[:lim, :])
+        else:
+            vmax = vmaxList[i_dat]
+        if xbound is None:
+            xbound = [0, data_x[-1]]
+        if isinstance(ybound, float):
+            ybound = [0, ybound]
+        elif isinstance(ybound, int):
+            ybound = [0, float(ybound)]
+
+        if len(listData) == 1:
+            loc_ax = axs
+        else:
+            loc_ax = axs[i_dat]
+
+        if isinstance(listXAxisName, list):
+            x_lab = listXAxisName[i_dat]
+        elif isinstance(listXAxisName, str):
+            x_lab = listXAxisName
+        else:
+            x_lab = "x"
+
+        if isinstance(listYAxisName, list):
+            y_lab = listYAxisName[i_dat]
+        elif isinstance(listYAxisName, str):
+            y_lab = listYAxisName
+        else:
+            y_lab = "t [s]"
+
+        if isinstance(listTitle, list):
+            title = listTitle[i_dat]
+        elif isinstance(listTitle, str):
+            title = listTitle
+        else:
+            title = None
+
+        if isinstance(listCBLabel, list):
+            cb_lab = listCBLabel[i_dat]
+        elif isinstance(listCBLabel, str):
+            cb_lab = listCBLabel
+        else:
+            cb_lab = ""
+
+        im = loc_ax.imshow(
+            data[:lim, :],
+            cmap=cm.viridis,
+            interpolation=interp,
+            vmin=vmin,
+            vmax=vmax,
+            extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
+            aspect="auto",
+        )
+        divider = make_axes_locatable(loc_ax)
+        cax = divider.append_axes("right", size="10%", pad=0.2)
+        cbar = fig.colorbar(im, cax=cax)
+        cbar.set_label(cb_lab)
+        ax = cbar.ax
+        text = ax.yaxis.label
+        font = matplotlib.font_manager.FontProperties(
+            family="times new roman", weight="bold", size=fontsize
+        )
+        text.set_font_properties(font)
+
+        if i_dat == 0:
+            pretty_labels(
+                x_lab, y_lab, fontsize, title=title, ax=loc_ax, grid=grid
+            )
+        else:
+            pretty_labels(
+                x_lab, "", fontsize, title=title, ax=loc_ax, grid=grid
+            )
+
+        if xticks is not None:
+            loc_ax.set_xticks(xticks)
+        else:
+            loc_ax.set_xticks([])  # values
+            loc_ax.set_xticklabels([])  # labels
+        if yticks is not None and not i_dat == 0:
+            loc_ax.set_yticks(yticks)
+        else:
+            loc_ax.set_yticks([])  # values
+            loc_ax.set_yticklabels([])  # labels
+
+        for l in cbar.ax.yaxis.get_ticklabels():
+            l.set_weight("bold")
+            l.set_family("serif")
+            l.set_fontsize(fontsize)
+
+    if not globalTitle is None:
+        fig.tight_layout(rect=[0, 0.03, 1, 0.95])
+        pretty_suplabels(
+            xlabel=None,
+            ylabel=None,
+            title=globalTitle,
+            fontsize=fontsize,
+        )
 
 
 def snapVizZslice(field, x, y, figureDir, figureName, title=None):
@@ -275,215 +699,3 @@ def plot_fromLatentToData(model, nSamples, xfeat=None, yfeat=None):
         title="Generated",
         ax=axes[1],
     )
-
-
-def pretty_bar_plot(
-    xlabel1,
-    yval,
-    xlabel2=None,
-    yerr=None,
-    ymed=None,
-    yerr_lower=None,
-    yerr_upper=None,
-    title=None,
-    ylabel=None,
-    bar_color=None,
-    width=0.4,
-    ylim=None,
-    fontsize=14,
-):
-    if ylim is not None:
-        assert len(ylim) == 2
-
-    if xlabel2 is None:
-        assert len(xlabel1) == len(yval)
-        if yerr is not None:
-            assert len(xlabel1) == len(yerr)
-
-        fig = plt.figure(figsize=(len(xlabel1) * 2, 6))
-        x = range(len(xlabel1))
-
-        if bar_color is None:
-            plt.bar(x, yval, width=width, align="center")
-        else:
-            plt.bar(x, yval, width=width, align="center", color=bar_color)
-        if yerr is not None:
-            plt.errorbar(
-                x,
-                yval,
-                yerr,
-                barsabove=True,
-                capsize=5,
-                elinewidth=3,
-                fmt="none",
-                color="k",
-            )
-        if (
-            yerr_lower is not None
-            and yerr_upper is not None
-            and ymed is not None
-        ):
-            plt.errorbar(
-                x,
-                ymed,
-                np.array(list(zip(yerr_lower, yerr_upper))).T,
-                barsabove=True,
-                capsize=5,
-                elinewidth=3,
-                fmt="none",
-                color="k",
-            )
-        if ylabel is None:
-            ylabel = ""
-        if title is None:
-            title = ""
-        pretty_labels("", ylabel, title=title, fontsize=fontsize)
-        ax = plt.gca()
-        ax.set_xticks(x, xlabel1)
-
-        for tick in ax.xaxis.get_major_ticks():
-            tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
-            tick.label1.set_fontweight("bold")
-        for tick in ax.yaxis.get_major_ticks():
-            tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
-            tick.label1.set_fontweight("bold")
-        for axis in ["top", "bottom", "left", "right"]:
-            ax.spines[axis].set_linewidth(2)
-            ax.spines[axis].set_color("black")
-        if ylim is not None:
-            ax.set_ylim(ylim[0], ylim[1])
-
-    else:
-        # check yval
-        assert len(yval) == len(xlabel2)
-        assert len(yval[xlabel2[0]]) == len(xlabel1)
-
-        if yerr is not None:
-            assert len(yerr) == len(xlabel2)
-            assert len(yerr[xlabel2[0]]) == len(xlabel1)
-        elif (
-            yerr_lower is not None
-            and yerr_upper is not None
-            and ymed is not None
-        ):
-            assert len(yerr_lower) == len(xlabel2)
-            assert len(yerr_upper) == len(xlabel2)
-            assert len(ymed) == len(xlabel2)
-            assert len(yerr_lower[xlabel2[0]]) == len(xlabel1)
-            assert len(yerr_upper[xlabel2[0]]) == len(xlabel1)
-            assert len(ymed[xlabel2[0]]) == len(xlabel1)
-
-        x = np.arange(len(xlabel1))  # the label locations
-        width = width / len(xlabel2)  # the width of the bars
-        multiplier = 0
-        fig, ax = plt.subplots(figsize=(len(xlabel1) * 2, 6))
-
-        if yerr is not None:
-            for (lab2, measurement), (lab2, measurement_err) in zip(
-                yval.items(), yerr.items()
-            ):
-                offset = width * multiplier
-                if bar_color is None:
-                    rects = ax.bar(x + offset, measurement, width, label=lab2)
-                else:
-                    rects = ax.bar(
-                        x + offset,
-                        measurement,
-                        width,
-                        label=lab2,
-                        color=bar_color,
-                    )
-                ax.errorbar(
-                    x + offset,
-                    measurement,
-                    yerr=measurement_err,
-                    barsabove=True,
-                    capsize=5,
-                    elinewidth=3,
-                    fmt="none",
-                    color="k",
-                )
-                multiplier += 1
-
-        elif (
-            yerr_lower is not None
-            and yerr_upper is not None
-            and ymed is not None
-        ):
-            for (
-                (lab2, measurement),
-                (lab2, measurement_err_lo),
-                (lab2, measurement_err_hi),
-                (lab2, measurement_med),
-            ) in zip(
-                yval.items(),
-                yerr_lower.items(),
-                yerr_upper.items(),
-                ymed.items(),
-            ):
-                offset = width * multiplier
-                if bar_color is None:
-                    rects = ax.bar(x + offset, measurement, width, label=lab2)
-                else:
-                    rects = ax.bar(
-                        x + offset,
-                        measurement,
-                        width,
-                        label=lab2,
-                        color=bar_color[xlabel2.index(lab2)],
-                    )
-                multiplier += 1
-                ax.errorbar(
-                    x + offset,
-                    measurement_med,
-                    np.array(
-                        list(zip(measurement_err_lo, measurement_err_hi))
-                    ).T,
-                    barsabove=True,
-                    capsize=5,
-                    elinewidth=3,
-                    fmt="none",
-                    color="k",
-                )
-
-        else:
-            for lab2, measurement in yval.items():
-                offset = width * multiplier
-                if bar_color is None:
-                    rects = ax.bar(x + offset, measurement, width, label=lab2)
-                else:
-                    rects = ax.bar(
-                        x + offset,
-                        measurement,
-                        width,
-                        label=lab2,
-                        color=bar_color,
-                    )
-                multiplier += 1
-
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        if ylabel is None:
-            ylabel = ""
-        if title is None:
-            title = ""
-        pretty_labels("", ylabel, title=title, fontsize=fontsize)
-        ax.set_xticks(x + width, xlabel1)
-
-        for tick in ax.xaxis.get_major_ticks():
-            tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
-            tick.label1.set_fontweight("bold")
-        for tick in ax.yaxis.get_major_ticks():
-            tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
-            tick.label1.set_fontweight("bold")
-        for axis in ["top", "bottom", "left", "right"]:
-            ax.spines[axis].set_linewidth(2)
-            ax.spines[axis].set_color("black")
-
-        if len(xlabel2) > 1:
-            pretty_legend()
-        if ylim is not None:
-            ax.set_ylim(ylim[0], ylim[1])
