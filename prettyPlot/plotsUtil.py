@@ -6,7 +6,15 @@ from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
+def pretty_labels(
+    xlabel,
+    ylabel,
+    fontsize=14,
+    title=None,
+    grid=True,
+    ax=None,
+    fontname="serif",
+):
     if ax is None:
         ax = plt.gca()
 
@@ -14,37 +22,37 @@ def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
         xlabel,
         fontsize=fontsize,
         fontweight="bold",
-        fontname="serif",
+        fontname=fontname,
     )
     ax.set_ylabel(
         ylabel,
         fontsize=fontsize,
         fontweight="bold",
-        fontname="serif",
+        fontname=fontname,
     )
     if not title == None:
         ax.set_title(
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="serif",
+            fontname=fontname,
         )
 
     ax.yaxis.get_offset_text().set_fontsize(fontsize)
     ax.yaxis.get_offset_text().set_fontweight("bold")
-    ax.yaxis.get_offset_text().set_fontname("serif")
+    ax.yaxis.get_offset_text().set_fontname(fontname)
 
     ax.xaxis.get_offset_text().set_fontsize(fontsize)
     ax.xaxis.get_offset_text().set_fontweight("bold")
-    ax.xaxis.get_offset_text().set_fontname("serif")
+    ax.xaxis.get_offset_text().set_fontname(fontname)
 
     for tick in ax.xaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("serif")
+        tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
     for tick in ax.yaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("serif")
+        tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
@@ -60,13 +68,13 @@ def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
         pass
 
 
-def pretty_legend(ax=None, fontsize=13, loc="best"):
+def pretty_legend(ax=None, fontsize=13, loc="best", fontname="serif"):
     if ax is None:
         ax = plt.gca()
 
     leg = ax.legend(
         prop={
-            "family": "serif",
+            "family": fontname,
             "size": fontsize,
             "weight": "bold",
         },
@@ -85,6 +93,7 @@ def pretty_suplabels(
     adjust_right=None,
     adjust_bottom=None,
     fontsize=14,
+    fontname="serif",
 ):
     """Make pretty sup labels for plots
 
@@ -114,21 +123,21 @@ def pretty_suplabels(
             xlabel,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="serif",
+            fontname=fontname,
         )
     if ylabel is not None:
         ax.supylabel(
             ylabel,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="serif",
+            fontname=fontname,
         )
     if title is not None:
         ax.suptitle(
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="serif",
+            fontname=fontname,
         )
 
     if (
@@ -162,6 +171,7 @@ def pretty_bar_plot(
     figsize=None,
     loc="best",
     grid=True,
+    fontname="serif",
 ):
     if ylim is not None:
         assert len(ylim) == 2
@@ -211,17 +221,24 @@ def pretty_bar_plot(
             ylabel = ""
         if title is None:
             title = ""
-        pretty_labels("", ylabel, title=title, fontsize=fontsize, grid=grid)
+        pretty_labels(
+            "",
+            ylabel,
+            title=title,
+            fontsize=fontsize,
+            grid=grid,
+            fontname=fontname,
+        )
         ax = plt.gca()
         ax.set_xticks(x, xlabel1)
 
         for tick in ax.xaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("serif")
+            tick.label1.set_fontname(fontname)
             tick.label1.set_fontweight("bold")
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("serif")
+            tick.label1.set_fontname(fontname)
             tick.label1.set_fontweight("bold")
         for axis in ["top", "bottom", "left", "right"]:
             ax.spines[axis].set_linewidth(2)
@@ -345,23 +362,30 @@ def pretty_bar_plot(
             ylabel = ""
         if title is None:
             title = ""
-        pretty_labels("", ylabel, title=title, fontsize=fontsize, grid=grid)
+        pretty_labels(
+            "",
+            ylabel,
+            title=title,
+            fontsize=fontsize,
+            grid=grid,
+            fontname=fontname,
+        )
         ax.set_xticks(x + width, xlabel1)
 
         for tick in ax.xaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("serif")
+            tick.label1.set_fontname(fontname)
             tick.label1.set_fontweight("bold")
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("serif")
+            tick.label1.set_fontname(fontname)
             tick.label1.set_fontweight("bold")
         for axis in ["top", "bottom", "left", "right"]:
             ax.spines[axis].set_linewidth(2)
             ax.spines[axis].set_color("black")
 
         if len(xlabel2) > 1:
-            pretty_legend(fontsize=fontsize)
+            pretty_legend(fontsize=fontsize, fontname=fontname)
         if ylim is not None:
             ax.set_ylim(ylim[0], ylim[1])
 
@@ -384,6 +408,7 @@ def pretty_multi_contour(
     yticks=None,
     figsize=None,
     grid=False,
+    fontname="serif",
 ):
     lim = -1
     lim_vmax_t = -1
@@ -460,17 +485,29 @@ def pretty_multi_contour(
         ax = cbar.ax
         text = ax.yaxis.label
         font = matplotlib.font_manager.FontProperties(
-            family="times new roman", weight="bold", size=fontsize
+            family=fontname, weight="bold", size=fontsize
         )
         text.set_font_properties(font)
 
         if i_dat == 0:
             pretty_labels(
-                x_lab, y_lab, fontsize, title=title, ax=loc_ax, grid=grid
+                x_lab,
+                y_lab,
+                fontsize,
+                title=title,
+                ax=loc_ax,
+                grid=grid,
+                fontname=fontname,
             )
         else:
             pretty_labels(
-                x_lab, "", fontsize, title=title, ax=loc_ax, grid=grid
+                x_lab,
+                "",
+                fontsize,
+                title=title,
+                ax=loc_ax,
+                grid=grid,
+                fontname=fontname,
             )
 
         if xticks is not None:
@@ -486,7 +523,7 @@ def pretty_multi_contour(
 
         for l in cbar.ax.yaxis.get_ticklabels():
             l.set_weight("bold")
-            l.set_family("serif")
+            l.set_family(fontname)
             l.set_fontsize(fontsize)
 
     if not globalTitle is None:
@@ -496,6 +533,7 @@ def pretty_multi_contour(
             ylabel=None,
             title=globalTitle,
             fontsize=fontsize,
+            fontname=fontname,
         )
 
 
@@ -569,7 +607,7 @@ def plot_contour(x, y, z, color):
     return h[0]
 
 
-def plotActiveSubspace(paramName, W, title=None, grid=True):
+def plotActiveSubspace(paramName, W, title=None, grid=True, fontname="serif"):
     x = []
     for i, name in enumerate(paramName):
         x.append(i)
@@ -589,16 +627,16 @@ def plotActiveSubspace(paramName, W, title=None, grid=True):
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="serif",
+            fontname=fontname,
         )
     ax = plt.gca()
     for tick in ax.xaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("serif")
+        tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
     for tick in ax.yaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("serif")
+        tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
