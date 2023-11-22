@@ -6,7 +6,7 @@ from matplotlib import cm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
-def pretty_labels(xlabel, ylabel, fontsize, title=None, grid=True, ax=None):
+def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
     if ax is None:
         ax = plt.gca()
 
@@ -369,10 +369,10 @@ def pretty_bar_plot(
 def plot_multi_contour(
     listDatax,
     listData,
-    listCBLabel,
-    listTitle,
     ybound,
     xbound=None,
+    listTitle=None,
+    listCBLabel=None,
     listXAxisName=None,
     listYAxisName=None,
     vminList=None,
