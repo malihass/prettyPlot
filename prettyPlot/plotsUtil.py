@@ -14,37 +14,37 @@ def pretty_labels(xlabel, ylabel, fontsize=14, title=None, grid=True, ax=None):
         xlabel,
         fontsize=fontsize,
         fontweight="bold",
-        fontname="Times New Roman",
+        fontname="serif",
     )
     ax.set_ylabel(
         ylabel,
         fontsize=fontsize,
         fontweight="bold",
-        fontname="Times New Roman",
+        fontname="serif",
     )
     if not title == None:
         ax.set_title(
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="Times New Roman",
+            fontname="serif",
         )
 
     ax.yaxis.get_offset_text().set_fontsize(fontsize)
     ax.yaxis.get_offset_text().set_fontweight("bold")
-    ax.yaxis.get_offset_text().set_fontname("Times New Roman")
+    ax.yaxis.get_offset_text().set_fontname("serif")
 
     ax.xaxis.get_offset_text().set_fontsize(fontsize)
     ax.xaxis.get_offset_text().set_fontweight("bold")
-    ax.xaxis.get_offset_text().set_fontname("Times New Roman")
+    ax.xaxis.get_offset_text().set_fontname("serif")
 
     for tick in ax.xaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontname("serif")
         tick.label1.set_fontweight("bold")
     for tick in ax.yaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontname("serif")
         tick.label1.set_fontweight("bold")
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
@@ -66,7 +66,7 @@ def pretty_legend(ax=None, fontsize=13, loc="best"):
 
     leg = ax.legend(
         prop={
-            "family": "Times New Roman",
+            "family": "serif",
             "size": fontsize,
             "weight": "bold",
         },
@@ -114,21 +114,21 @@ def pretty_suplabels(
             xlabel,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="Times New Roman",
+            fontname="serif",
         )
     if ylabel is not None:
         ax.supylabel(
             ylabel,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="Times New Roman",
+            fontname="serif",
         )
     if title is not None:
         ax.suptitle(
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="Times New Roman",
+            fontname="serif",
         )
 
     if (
@@ -217,11 +217,11 @@ def pretty_bar_plot(
 
         for tick in ax.xaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontname("serif")
             tick.label1.set_fontweight("bold")
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontname("serif")
             tick.label1.set_fontweight("bold")
         for axis in ["top", "bottom", "left", "right"]:
             ax.spines[axis].set_linewidth(2)
@@ -350,11 +350,11 @@ def pretty_bar_plot(
 
         for tick in ax.xaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontname("serif")
             tick.label1.set_fontweight("bold")
         for tick in ax.yaxis.get_major_ticks():
             tick.label1.set_fontsize(fontsize)
-            tick.label1.set_fontname("Times New Roman")
+            tick.label1.set_fontname("serif")
             tick.label1.set_fontweight("bold")
         for axis in ["top", "bottom", "left", "right"]:
             ax.spines[axis].set_linewidth(2)
@@ -589,16 +589,16 @@ def plotActiveSubspace(paramName, W, title=None, grid=True):
             title,
             fontsize=fontsize,
             fontweight="bold",
-            fontname="Times New Roman",
+            fontname="serif",
         )
     ax = plt.gca()
     for tick in ax.xaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontname("serif")
         tick.label1.set_fontweight("bold")
     for tick in ax.yaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
-        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontname("serif")
         tick.label1.set_fontweight("bold")
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
