@@ -62,4 +62,4 @@ jobs:
       - name: Test
         run: |
           #pytest -v 
-          python test_basic.py -m pytest
+          python tests/test_basic.py -m pytest
