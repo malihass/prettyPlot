@@ -1,6 +1,6 @@
 import numpy as np
 
-from prettyPlot.plotsUtil import *
+from prettyPlot.plotting import *
 
 
 def test_1d(verbose=False):

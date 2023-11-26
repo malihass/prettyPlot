@@ -12,6 +12,7 @@ def print_progress_bar(
     length=100,
     fill="█",
     printEnd="\r",
+    extraCond=True,
 ):
     """
     Call in a loop to create terminal progress bar
@@ -25,6 +26,8 @@ def print_progress_bar(
         fill        - Optional  : bar fill character (Str)
         printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
     """
+    if not extraCond:
+        return
     if total < 1e-12:
         return
     percent = ("{0:." + str(decimals) + "f}").format(
