@@ -2,9 +2,9 @@ import os
 import sys
 
 
-def parse_input_file(input_filename):
+def parse_input_file(input_filename="input"):
     if not os.path.isfile(input_filename):
-        print("ERROR: No input file name found, assuming it is 'input'")
+        print(f"ERROR: No input file found with name : {input_filename}")
         sys.exit()
 
     # ~~~~ Parse input
