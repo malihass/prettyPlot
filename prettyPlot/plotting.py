@@ -14,6 +14,8 @@ def pretty_labels(
     grid=True,
     ax=None,
     fontname="serif",
+    xminor=False,
+    yminor=False,
 ):
     if ax is None:
         ax = plt.gca()
@@ -50,10 +52,24 @@ def pretty_labels(
         tick.label1.set_fontsize(fontsize)
         tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
+
+    if xminor:
+        for tick in ax.xaxis.get_minor_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname(fontname)
+            tick.label1.set_fontweight("bold")
+
     for tick in ax.yaxis.get_major_ticks():
         tick.label1.set_fontsize(fontsize)
         tick.label1.set_fontname(fontname)
         tick.label1.set_fontweight("bold")
+
+    if yminor:
+        for tick in ax.yaxis.get_minor_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname(fontname)
+            tick.label1.set_fontweight("bold")
+
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
         ax.spines[axis].set_color("black")
@@ -63,9 +79,37 @@ def pretty_labels(
 
     try:
         plt.tight_layout()
-    except:
-        print("Could not call tight_layout")
+    except Exception as ex:
+        print(f"WARNING: Could not call tight_layout because: \n\n {ex} \n")
         pass
+
+
+def pretty_cbar(
+    im=None,
+    cax=None,
+    label="",
+    fontsize=14,
+    fontsize_label=14,
+    fontsize_ticks=12,
+    fontname="serif",
+):
+    if fontsize is not None:
+        fontsize_label = fontsize
+        fontsize_ticks = fontsize - 2
+
+    cbar = plt.colorbar(im, cax=cax)
+    cbar.set_label(label)
+    cbar_ax = cbar.ax
+    text = cbar_ax.yaxis.label
+    font = matplotlib.font_manager.FontProperties(
+        family=fontname, weight="bold", size=fontsize_label
+    )
+    text.set_font_properties(font)
+    for l in cbar_ax.yaxis.get_ticklabels():
+        l.set_weight("bold")
+        l.set_family(fontname)
+        l.set_fontsize(fontsize_ticks)
+    return cbar
 
 
 def pretty_legend(ax=None, fontsize=13, loc="best", fontname="serif"):
@@ -480,14 +524,22 @@ def pretty_multi_contour(
         )
         divider = make_axes_locatable(loc_ax)
         cax = divider.append_axes("right", size="10%", pad=0.2)
-        cbar = fig.colorbar(im, cax=cax)
-        cbar.set_label(cb_lab)
-        ax = cbar.ax
-        text = ax.yaxis.label
-        font = matplotlib.font_manager.FontProperties(
-            family=fontname, weight="bold", size=fontsize
+        cbar = pretty_cbar(
+            im=im,
+            cax=cax,
+            label=cb_lab,
+            fontsize_label=fontsize,
+            fontsize_ticks=fontsize - 2,
+            fontname="serif",
         )
-        text.set_font_properties(font)
+        # fig.colorbar(im, cax=cax)
+        # cbar.set_label(cb_lab)
+        # ax = cbar.ax
+        # text = ax.yaxis.label
+        # font = matplotlib.font_manager.FontProperties(
+        #    family=fontname, weight="bold", size=fontsize
+        # )
+        # text.set_font_properties(font)
 
         if i_dat == 0:
             pretty_labels(
@@ -521,10 +573,10 @@ def pretty_multi_contour(
             loc_ax.set_yticks([])  # values
             loc_ax.set_yticklabels([])  # labels
 
-        for l in cbar.ax.yaxis.get_ticklabels():
-            l.set_weight("bold")
-            l.set_family(fontname)
-            l.set_fontsize(fontsize)
+        # for l in cbar.ax.yaxis.get_ticklabels():
+        #    l.set_weight("bold")
+        #    l.set_family(fontname)
+        #    l.set_fontsize(fontsize)
 
     if not globalTitle is None:
         fig.tight_layout(rect=[0, 0.03, 1, 0.95])
