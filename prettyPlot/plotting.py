@@ -3,6 +3,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
+from matplotlib.colors import LogNorm
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
@@ -92,12 +93,18 @@ def pretty_cbar(
     fontsize_label=14,
     fontsize_ticks=12,
     fontname="serif",
+    log_scale=False,
 ):
     if fontsize is not None:
         fontsize_label = fontsize
         fontsize_ticks = fontsize - 2
 
-    cbar = plt.colorbar(im, cax=cax)
+    if log_scale:
+        norm = "log"
+    else:
+        norm = None
+    print(norm)
+    cbar = plt.colorbar(im, cax=cax, norm=norm)
     cbar.set_label(label)
     cbar_ax = cbar.ax
     text = cbar_ax.yaxis.label
@@ -453,6 +460,7 @@ def pretty_multi_contour(
     figsize=None,
     grid=False,
     fontname="serif",
+    log_scale_list=None,
 ):
     lim = -1
     lim_vmax_t = -1
@@ -513,15 +521,30 @@ def pretty_multi_contour(
         else:
             cb_lab = ""
 
-        im = loc_ax.imshow(
-            data[:lim, :],
-            cmap=cm.viridis,
-            interpolation=interp,
-            vmin=vmin,
-            vmax=vmax,
-            extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
-            aspect="auto",
-        )
+        if log_scale_list == None:
+            log_scale = False
+        else:
+            log_scale = log_scale_list[i_dat]
+
+        if log_scale:
+            im = loc_ax.matshow(
+                data[:lim, :],
+                cmap=cm.viridis,
+                interpolation=interp,
+                extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
+                aspect="auto",
+                norm=LogNorm(vmin, vmax),
+            )
+        else:
+            im = loc_ax.imshow(
+                data[:lim, :],
+                cmap=cm.viridis,
+                interpolation=interp,
+                vmin=vmin,
+                vmax=vmax,
+                extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
+                aspect="auto",
+            )
         divider = make_axes_locatable(loc_ax)
         cax = divider.append_axes("right", size="10%", pad=0.2)
         cbar = pretty_cbar(
