@@ -103,7 +103,6 @@ def pretty_cbar(
         norm = "log"
     else:
         norm = None
-    print(norm)
     cbar = plt.colorbar(im, cax=cax, norm=norm)
     cbar.set_label(label)
     cbar_ax = cbar.ax
