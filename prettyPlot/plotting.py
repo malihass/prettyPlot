@@ -93,17 +93,12 @@ def pretty_cbar(
     fontsize_label=14,
     fontsize_ticks=12,
     fontname="serif",
-    log_scale=False,
 ):
     if fontsize is not None:
         fontsize_label = fontsize
         fontsize_ticks = fontsize - 2
 
-    if log_scale:
-        norm = "log"
-    else:
-        norm = None
-    cbar = plt.colorbar(im, cax=cax, norm=norm)
+    cbar = plt.colorbar(im, cax=cax)
     cbar.set_label(label)
     cbar_ax = cbar.ax
     text = cbar_ax.yaxis.label
@@ -524,6 +519,8 @@ def pretty_multi_contour(
             log_scale = False
         else:
             log_scale = log_scale_list[i_dat]
+        if vmin <= 0:
+            log_scale = False
 
         if log_scale:
             im = loc_ax.matshow(
@@ -546,14 +543,17 @@ def pretty_multi_contour(
             )
         divider = make_axes_locatable(loc_ax)
         cax = divider.append_axes("right", size="10%", pad=0.2)
-        cbar = pretty_cbar(
-            im=im,
-            cax=cax,
-            label=cb_lab,
-            fontsize_label=fontsize,
-            fontsize_ticks=fontsize - 2,
-            fontname="serif",
-        )
+        try:
+            cbar = pretty_cbar(
+                im=im,
+                cax=cax,
+                label=cb_lab,
+                fontsize_label=fontsize,
+                fontsize_ticks=fontsize - 2,
+                fontname="serif",
+            )
+        except:
+            print(cb_lab)
         # fig.colorbar(im, cax=cax)
         # cbar.set_label(cb_lab)
         # ax = cbar.ax
