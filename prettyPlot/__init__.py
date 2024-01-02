@@ -1,4 +1,4 @@
-"""Paper plot module"""
+"""Pretty plot module"""
 import os
 
 from prettyPlot.version import __version__
