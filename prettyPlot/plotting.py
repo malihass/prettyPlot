@@ -17,6 +17,7 @@ def pretty_labels(
     fontname="serif",
     xminor=False,
     yminor=False,
+    tight=True,
 ):
     if ax is None:
         ax = plt.gca()
@@ -78,11 +79,12 @@ def pretty_labels(
     if grid:
         ax.grid(color="k", linestyle="-", linewidth=0.5)
 
-    try:
-        plt.tight_layout()
-    except Exception as ex:
-        print(f"WARNING: Could not call tight_layout because: \n\n {ex} \n")
-        pass
+    if tight:
+        try:
+            plt.tight_layout()
+        except Exception as ex:
+            print(f"WARNING: Could not call tight_layout because: \n\n {ex} \n")
+            pass
 
 
 def pretty_cbar(
@@ -456,6 +458,9 @@ def pretty_multi_contour(
     fontname="serif",
     log_scale_list=None,
     display_cbar_list=None,
+    cbar_pad=0.2,
+    cbar_size_percent=10,
+    tight=True,
 ):
     lim = -1
     lim_vmax_t = -1
@@ -547,9 +552,9 @@ def pretty_multi_contour(
                 extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
                 aspect="auto",
             )
+        divider = make_axes_locatable(loc_ax)
         if display_cbar:
-            divider = make_axes_locatable(loc_ax)
-            cax = divider.append_axes("right", size="10%", pad=0.2)
+            cax = divider.append_axes("right", size=f"{cbar_size_percent}%", pad=cbar_pad)
             try:
                 cbar = pretty_cbar(
                     im=im,
@@ -579,6 +584,7 @@ def pretty_multi_contour(
                 ax=loc_ax,
                 grid=grid,
                 fontname=fontname,
+                tight=tight,
             )
         else:
             pretty_labels(
@@ -589,6 +595,7 @@ def pretty_multi_contour(
                 ax=loc_ax,
                 grid=grid,
                 fontname=fontname,
+                tight=tight,
             )
 
         if xticks is not None:
