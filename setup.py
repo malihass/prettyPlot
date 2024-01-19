@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='prettyPlot',
-    version='0.0.14',
+    version='0.0.15',
     description="Plotting tools for journal quality figures",
     url="https://github.com/malihass/prettyPlot",
     author="Malik Hassanaly",

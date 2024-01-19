@@ -33,7 +33,7 @@ def pretty_labels(
         fontweight="bold",
         fontname=fontname,
     )
-    if not title == None:
+    if not title is None:
         ax.set_title(
             title,
             fontsize=fontsize,
@@ -455,6 +455,7 @@ def pretty_multi_contour(
     grid=False,
     fontname="serif",
     log_scale_list=None,
+    display_cbar_list=None,
 ):
     lim = -1
     lim_vmax_t = -1
@@ -467,11 +468,11 @@ def pretty_multi_contour(
     for i_dat in range(len(listData)):
         data = listData[i_dat]
         data_x = np.squeeze(listDatax[i_dat])
-        if vminList == None:
+        if vminList is None:
             vmin = np.nanmin(data[:lim, :])
         else:
             vmin = vminList[i_dat]
-        if vmaxList == None:
+        if vmaxList is None:
             vmax = np.nanmax(data[:lim, :])
         else:
             vmax = vmaxList[i_dat]
@@ -515,12 +516,17 @@ def pretty_multi_contour(
         else:
             cb_lab = ""
 
-        if log_scale_list == None:
+        if log_scale_list is None:
             log_scale = False
         else:
             log_scale = log_scale_list[i_dat]
         if vmin <= 0:
             log_scale = False
+
+        if display_cbar_list is None:
+            display_cbar = True
+        else:
+            display_cbar = display_cbar_list[i_dat]
 
         if log_scale:
             im = loc_ax.matshow(
@@ -543,17 +549,18 @@ def pretty_multi_contour(
             )
         divider = make_axes_locatable(loc_ax)
         cax = divider.append_axes("right", size="10%", pad=0.2)
-        try:
-            cbar = pretty_cbar(
-                im=im,
-                cax=cax,
-                label=cb_lab,
-                fontsize_label=fontsize,
-                fontsize_ticks=fontsize - 2,
-                fontname="serif",
-            )
-        except:
-            print(cb_lab)
+        if display_cbar:
+            try:
+                cbar = pretty_cbar(
+                    im=im,
+                    cax=cax,
+                    label=cb_lab,
+                    fontsize_label=fontsize,
+                    fontsize_ticks=fontsize - 2,
+                    fontname="serif",
+                )
+            except:
+                print(cb_lab)
         # fig.colorbar(im, cax=cax)
         # cbar.set_label(cb_lab)
         # ax = cbar.ax
@@ -631,9 +638,9 @@ def snapVizZslice(field, x, y, figureDir, figureName, title=None):
 def movieVizZslice(field, x, y, itime, movieDir, minVal=None, maxVal=None):
     fig, ax = plt.subplots(1)
     fontsize = 16
-    if minVal == None:
+    if minVal is None:
         minVal = np.amin(field)
-    if maxVal == None:
+    if maxVal is None:
         maxVal = np.amax(field)
     plt.imshow(
         np.transpose(field),
@@ -696,7 +703,7 @@ def plotActiveSubspace(paramName, W, title=None, grid=True, fontname="serif"):
         tick_label=paramName,
     )
     fontsize = 16
-    if not title == None:
+    if not title is None:
         plt.title(
             title,
             fontsize=fontsize,
