@@ -547,9 +547,9 @@ def pretty_multi_contour(
                 extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
                 aspect="auto",
             )
-        divider = make_axes_locatable(loc_ax)
-        cax = divider.append_axes("right", size="10%", pad=0.2)
         if display_cbar:
+            divider = make_axes_locatable(loc_ax)
+            cax = divider.append_axes("right", size="10%", pad=0.2)
             try:
                 cbar = pretty_cbar(
                     im=im,
