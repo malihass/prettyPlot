@@ -83,7 +83,9 @@ def pretty_labels(
         try:
             plt.tight_layout()
         except Exception as ex:
-            print(f"WARNING: Could not call tight_layout because: \n\n {ex} \n")
+            print(
+                f"WARNING: Could not call tight_layout because: \n\n {ex} \n"
+            )
             pass
 
 
@@ -115,7 +117,14 @@ def pretty_cbar(
     return cbar
 
 
-def pretty_legend(ax=None, fontsize=13, loc="best", fontname="serif"):
+def pretty_legend(
+    ax=None,
+    fontsize=13,
+    loc="best",
+    fontname="serif",
+    frame=True,
+    framewidth=2.0,
+):
     if ax is None:
         ax = plt.gca()
 
@@ -127,8 +136,9 @@ def pretty_legend(ax=None, fontsize=13, loc="best", fontname="serif"):
         },
         loc=loc,
     )
-    leg.get_frame().set_linewidth(2.0)
-    leg.get_frame().set_edgecolor("k")
+    if frame:
+        leg.get_frame().set_linewidth(framewidth)
+        leg.get_frame().set_edgecolor("k")
 
 
 def pretty_suplabels(
@@ -219,6 +229,8 @@ def pretty_bar_plot(
     loc="best",
     grid=True,
     fontname="serif",
+    xminor=False,
+    yminor=False,
 ):
     if ylim is not None:
         assert len(ylim) == 2
@@ -275,6 +287,8 @@ def pretty_bar_plot(
             fontsize=fontsize,
             grid=grid,
             fontname=fontname,
+            xminor=xminor,
+            yminor=yminor,
         )
         ax = plt.gca()
         ax.set_xticks(x, xlabel1)
@@ -416,6 +430,8 @@ def pretty_bar_plot(
             fontsize=fontsize,
             grid=grid,
             fontname=fontname,
+            xminor=xminor,
+            yminor=yminor,
         )
         ax.set_xticks(x + width, xlabel1)
 
@@ -554,7 +570,9 @@ def pretty_multi_contour(
             )
         divider = make_axes_locatable(loc_ax)
         if display_cbar:
-            cax = divider.append_axes("right", size=f"{cbar_size_percent}%", pad=cbar_pad)
+            cax = divider.append_axes(
+                "right", size=f"{cbar_size_percent}%", pad=cbar_pad
+            )
             try:
                 cbar = pretty_cbar(
                     im=im,
