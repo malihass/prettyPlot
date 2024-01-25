@@ -135,11 +135,12 @@ def pretty_legend(
             "weight": "bold",
         },
         loc=loc,
+        frameon=frame
     )
     if frame:
         leg.get_frame().set_linewidth(framewidth)
         leg.get_frame().set_edgecolor("k")
-
+    
 
 def pretty_suplabels(
     xlabel=None,
