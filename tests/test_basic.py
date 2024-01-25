@@ -8,8 +8,9 @@ def test_1d(verbose=False):
     y = x**2
 
     fig = plt.figure()
-    plt.plot(x, y, linewidth=3, color="k")
+    plt.plot(x, y, linewidth=3, color="k", label="test")
     pretty_labels("x", "y", 14)
+    pretty_legend()
     if verbose:
         plt.show()
     else:

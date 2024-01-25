@@ -122,11 +122,14 @@ def pretty_legend(
     fontsize=13,
     loc="best",
     fontname="serif",
-    frame=True,
     framewidth=2.0,
+    **kwargs,
 ):
     if ax is None:
         ax = plt.gca()
+
+    if "frameon" not in kwargs:
+        kwargs["frameon"] = True
 
     leg = ax.legend(
         prop={
@@ -135,12 +138,12 @@ def pretty_legend(
             "weight": "bold",
         },
         loc=loc,
-        frameon=frame
+        **kwargs,
     )
-    if frame:
+    if kwargs["frameon"]:
         leg.get_frame().set_linewidth(framewidth)
         leg.get_frame().set_edgecolor("k")
-    
+
 
 def pretty_suplabels(
     xlabel=None,
