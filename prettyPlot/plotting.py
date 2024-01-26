@@ -120,7 +120,6 @@ def pretty_cbar(
 def pretty_legend(
     ax=None,
     fontsize=13,
-    loc="best",
     fontname="serif",
     framewidth=2.0,
     **kwargs,
@@ -130,6 +129,12 @@ def pretty_legend(
 
     if "frameon" not in kwargs:
         kwargs["frameon"] = True
+    if "loc" not in kwargs:
+        kwargs["loc"] = "best"
+    if "handletextpad" not in kwargs:
+        kwargs["handletextpad"] = None
+    if "borderpad" not in kwargs:
+        kwargs["borderpad"] = None
 
     leg = ax.legend(
         prop={
@@ -137,7 +142,6 @@ def pretty_legend(
             "size": fontsize,
             "weight": "bold",
         },
-        loc=loc,
         **kwargs,
     )
     if kwargs["frameon"]:
