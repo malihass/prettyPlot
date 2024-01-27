@@ -699,7 +699,7 @@ def make_movie(ntime, movieDir, movieName, prefix="im_"):
         ## Read in picture
         fname = movieDir + "/" + prefix + str(i) + ".png"
         myimages.append(imageio.imread(fname))
-    imageio.mimsave(movieName, myimages)
+    imageio.mimwrite(movieName, myimages, optimize=False)
     return
 
 

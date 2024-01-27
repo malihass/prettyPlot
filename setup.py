@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='prettyPlot',
-    version='0.0.22',
+    version='0.0.23',
     description="Plotting tools for journal quality figures",
     url="https://github.com/malihass/prettyPlot",
     author="Malik Hassanaly",
@@ -16,5 +16,5 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     python_requires='>=3.10',
-    install_requires=["numpy","matplotlib", "imageio"],
+    install_requires=["numpy","matplotlib>=3.7.3", "imageio"],
 )
