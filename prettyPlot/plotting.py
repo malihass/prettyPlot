@@ -18,6 +18,8 @@ def pretty_labels(
     xminor=False,
     yminor=False,
     tight=True,
+    zlabel=None,
+    zminor=False,
 ):
     if ax is None:
         ax = plt.gca()
@@ -34,6 +36,13 @@ def pretty_labels(
         fontweight="bold",
         fontname=fontname,
     )
+    if zlabel is not None:
+        ax.set_zlabel(
+            zlabel,
+            fontsize=fontsize,
+            fontweight="bold",
+            fontname=fontname,
+        )
     if not title is None:
         ax.set_title(
             title,
@@ -41,6 +50,11 @@ def pretty_labels(
             fontweight="bold",
             fontname=fontname,
         )
+
+    if zlabel is not None:
+        ax.zaxis.get_offset_text().set_fontsize(fontsize)
+        ax.zaxis.get_offset_text().set_fontweight("bold")
+        ax.zaxis.get_offset_text().set_fontname(fontname)
 
     ax.yaxis.get_offset_text().set_fontsize(fontsize)
     ax.yaxis.get_offset_text().set_fontweight("bold")
@@ -71,6 +85,17 @@ def pretty_labels(
             tick.label1.set_fontsize(fontsize)
             tick.label1.set_fontname(fontname)
             tick.label1.set_fontweight("bold")
+    if zlabel is not None:
+        for tick in ax.zaxis.get_major_ticks():
+            tick.label1.set_fontsize(fontsize)
+            tick.label1.set_fontname(fontname)
+            tick.label1.set_fontweight("bold")
+
+        if zminor:
+            for tick in ax.zaxis.get_minor_ticks():
+                tick.label1.set_fontsize(fontsize)
+                tick.label1.set_fontname(fontname)
+                tick.label1.set_fontweight("bold")
 
     for axis in ["top", "bottom", "left", "right"]:
         ax.spines[axis].set_linewidth(2)
