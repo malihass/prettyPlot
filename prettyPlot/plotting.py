@@ -159,6 +159,12 @@ def pretty_suplabels(
     adjust_bottom=None,
     fontsize=14,
     fontname="serif",
+    x_x=0.5,
+    x_y=0.01,
+    y_x=0.02,
+    y_y=0.5,
+    t_x=0.5,
+    t_y=0.98,
 ):
     """Make pretty sup labels for plots
 
@@ -189,6 +195,8 @@ def pretty_suplabels(
             fontsize=fontsize,
             fontweight="bold",
             fontname=fontname,
+            x=x_x,
+            y=x_y,
         )
     if ylabel is not None:
         ax.supylabel(
@@ -196,6 +204,8 @@ def pretty_suplabels(
             fontsize=fontsize,
             fontweight="bold",
             fontname=fontname,
+            x=y_x,
+            y=y_y,
         )
     if title is not None:
         ax.suptitle(
@@ -203,6 +213,8 @@ def pretty_suplabels(
             fontsize=fontsize,
             fontweight="bold",
             fontname=fontname,
+            x=t_x,
+            y=t_y,
         )
 
     if (
