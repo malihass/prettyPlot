@@ -1,9 +1,14 @@
 import os
 from setuptools import setup
 
+here = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(here, "prettyPlot", "version.py"), encoding="utf-8") as f:
+    version = f.read()
+version = version.split('=')[-1].strip().strip('"').strip("'")
+
 setup(
     name='prettyPlot',
-    version='0.0.25',
+    version=version,
     description="Plotting tools for journal quality figures",
     url="https://github.com/malihass/prettyPlot",
     author="Malik Hassanaly",

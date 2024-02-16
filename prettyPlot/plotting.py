@@ -20,6 +20,8 @@ def pretty_labels(
     tight=True,
     zlabel=None,
     zminor=False,
+    xticks=None,
+    yticks=None,
 ):
     if ax is None:
         ax = plt.gca()
@@ -50,6 +52,11 @@ def pretty_labels(
             fontweight="bold",
             fontname=fontname,
         )
+
+    if xticks is not None:
+        ax.set_xticks(xticks)
+    if yticks is not None:
+        ax.set_yticks(yticks)
 
     if zlabel is not None:
         ax.zaxis.get_offset_text().set_fontsize(fontsize)
@@ -122,12 +129,13 @@ def pretty_cbar(
     fontsize_label=14,
     fontsize_ticks=12,
     fontname="serif",
+    cbarticks=None,
 ):
     if fontsize is not None:
         fontsize_label = fontsize
         fontsize_ticks = fontsize - 2
 
-    cbar = plt.colorbar(im, cax=cax)
+    cbar = plt.colorbar(im, cax=cax, ticks=cbarticks)
     cbar.set_label(label)
     cbar_ax = cbar.ax
     text = cbar_ax.yaxis.label
