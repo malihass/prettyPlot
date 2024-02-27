@@ -537,7 +537,7 @@ def pretty_bar_plot(
             ax.spines[axis].set_linewidth(2)
             ax.spines[axis].set_color("black")
 
-        if xlabel2 is not None and len(xlabel2) > 1:
+        if xlabel2 is not None and len(xlabel2) > 1 and label:
             pretty_legend(fontsize=fontsize, fontname=fontname)
         if ylim is not None:
             ax.set_ylim(ylim[0], ylim[1])
