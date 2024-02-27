@@ -284,11 +284,12 @@ def pretty_bar_plot(
     fontname="serif",
     xminor=False,
     yminor=False,
+    label=True
 ):
     if ylim is not None:
         assert len(ylim) == 2
 
-    if xlabel2 is None:
+    if xlabel2 is None and label:
         assert len(xlabel1) == len(yval)
         if yerr is not None:
             assert len(xlabel1) == len(yerr)
@@ -362,16 +363,26 @@ def pretty_bar_plot(
 
     else:
         # check yval
-        assert len(yval) == len(xlabel2)
-        assert len(yval[xlabel2[0]]) == len(xlabel1)
+        if xlabel2 is not None:
+            assert len(yval) == len(xlabel2)
+            assert len(yval[xlabel2[0]]) == len(xlabel1)
+        else:
+            for key in yval:
+                len(yval[key]) == len(xlabel1)
 
-        if yerr is not None:
+        if xlabel2 is not None and yerr is not None:
             assert len(yerr) == len(xlabel2)
             assert len(yerr[xlabel2[0]]) == len(xlabel1)
+        elif xlabel2 is None and yerr is not None:
+            assert len(yerr) == len(yval)
+            for key in yerr:
+                assert len(yerr[key]) == len(xlabel1)
+
         elif (
             yerr_lower is not None
             and yerr_upper is not None
             and ymed is not None
+            and xlabel2 is not None
         ):
             assert len(yerr_lower) == len(xlabel2)
             assert len(yerr_upper) == len(xlabel2)
@@ -380,8 +391,24 @@ def pretty_bar_plot(
             assert len(yerr_upper[xlabel2[0]]) == len(xlabel1)
             assert len(ymed[xlabel2[0]]) == len(xlabel1)
 
+        elif (
+            yerr_lower is not None
+            and yerr_upper is not None
+            and ymed is not None
+            and not xlabel2 is None
+        ):
+            assert len(yerr_lower) == len(yerr_upper)
+            assert len(ymed) == len(yerr_lower)
+            for key in yerr_lower:
+                assert len(yerr_lower[key]) == len(xlabel1)
+                assert len(yerr_upper[key]) == len(xlabel1)
+                assert len(ymed[key]) == len(xlabel1)
+
         x = np.arange(len(xlabel1))  # the label locations
-        width = width / len(xlabel2)  # the width of the bars
+        if xlabel2 is not None:
+            width = width / len(xlabel2)  # the width of the bars
+        else:
+            width = width / len(yval)  # the width of the bars
         multiplier = 0
 
         if figsize is None:
@@ -393,6 +420,8 @@ def pretty_bar_plot(
                 yval.items(), yerr.items()
             ):
                 offset = width * multiplier
+                if xlabel2 is None:
+                    lab2 = None
                 if bar_color is None:
                     rects = ax.bar(x + offset, measurement, width, label=lab2)
                 else:
@@ -420,27 +449,33 @@ def pretty_bar_plot(
             and yerr_upper is not None
             and ymed is not None
         ):
-            for (
+            for ibar, (
                 (lab2, measurement),
                 (lab2, measurement_err_lo),
                 (lab2, measurement_err_hi),
                 (lab2, measurement_med),
-            ) in zip(
+            ) in enumerate(zip(
                 yval.items(),
                 yerr_lower.items(),
                 yerr_upper.items(),
                 ymed.items(),
-            ):
+            )):
                 offset = width * multiplier
+                if xlabel2 is None:
+                    lab2 = None
                 if bar_color is None:
                     rects = ax.bar(x + offset, measurement, width, label=lab2)
                 else:
+                    if xlabel2 is None:
+                        icbar = ibar
+                    else:
+                        icbar = xlabel2.index(lab2)   
                     rects = ax.bar(
                         x + offset,
                         measurement,
                         width,
                         label=lab2,
-                        color=bar_color[xlabel2.index(lab2)],
+                        color=bar_color[icbar],
                     )
                 multiplier += 1
                 ax.errorbar(
@@ -459,6 +494,8 @@ def pretty_bar_plot(
         else:
             for lab2, measurement in yval.items():
                 offset = width * multiplier
+                if xlabel2 is None:
+                    lab2 = None
                 if bar_color is None:
                     rects = ax.bar(x + offset, measurement, width, label=lab2)
                 else:
@@ -500,7 +537,7 @@ def pretty_bar_plot(
             ax.spines[axis].set_linewidth(2)
             ax.spines[axis].set_color("black")
 
-        if len(xlabel2) > 1:
+        if xlabel2 is not None and len(xlabel2) > 1:
             pretty_legend(fontsize=fontsize, fontname=fontname)
         if ylim is not None:
             ax.set_ylim(ylim[0], ylim[1])
