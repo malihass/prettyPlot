@@ -284,7 +284,7 @@ def pretty_bar_plot(
     fontname="serif",
     xminor=False,
     yminor=False,
-    label=True
+    label=True,
 ):
     if ylim is not None:
         assert len(ylim) == 2
@@ -454,12 +454,14 @@ def pretty_bar_plot(
                 (lab2, measurement_err_lo),
                 (lab2, measurement_err_hi),
                 (lab2, measurement_med),
-            ) in enumerate(zip(
-                yval.items(),
-                yerr_lower.items(),
-                yerr_upper.items(),
-                ymed.items(),
-            )):
+            ) in enumerate(
+                zip(
+                    yval.items(),
+                    yerr_lower.items(),
+                    yerr_upper.items(),
+                    ymed.items(),
+                )
+            ):
                 offset = width * multiplier
                 if xlabel2 is None:
                     lab2 = None
@@ -469,7 +471,7 @@ def pretty_bar_plot(
                     if xlabel2 is None:
                         icbar = ibar
                     else:
-                        icbar = xlabel2.index(lab2)   
+                        icbar = xlabel2.index(lab2)
                     rects = ax.bar(
                         x + offset,
                         measurement,
