@@ -130,6 +130,7 @@ def pretty_cbar(
     fontsize_ticks=12,
     fontname="serif",
     cbarticks=None,
+    cbarticks_labels=None,
 ):
     if fontsize is not None:
         fontsize_label = fontsize
@@ -137,6 +138,8 @@ def pretty_cbar(
 
     cbar = plt.colorbar(im, cax=cax, ticks=cbarticks)
     cbar.set_label(label)
+    if cbarticks_labels is not None:
+        cbar.ax.set_yticklabels(cbarticks_labels)
     cbar_ax = cbar.ax
     text = cbar_ax.yaxis.label
     font = matplotlib.font_manager.FontProperties(
@@ -569,6 +572,9 @@ def pretty_multi_contour(
     cbar_pad=0.2,
     cbar_size_percent=10,
     tight=True,
+    cbarticks_list=None,
+    cbarticks_labels_list=None,
+    cmap_list=None,
 ):
     lim = -1
     lim_vmax_t = -1
@@ -641,10 +647,25 @@ def pretty_multi_contour(
         else:
             display_cbar = display_cbar_list[i_dat]
 
+        if cbarticks_list is None:
+            cbarticks = None
+        else:
+            cbarticks = cbarticks_list[i_dat]
+
+        if cbarticks_labels_list is None:
+            cbarticks_labels = None
+        else:
+            cbarticks_labels = cbarticks_labels_list[i_dat]
+
+        if cmap_list is None:
+            cmap = cm.viridis
+        else:
+            cmap = cmap_list[i_dat]
+
         if log_scale:
             im = loc_ax.matshow(
                 data[:lim, :],
-                cmap=cm.viridis,
+                cmap=cmap,
                 interpolation=interp,
                 extent=[xbound[0], xbound[1], ybound[1], ybound[0]],
                 aspect="auto",
@@ -653,7 +674,7 @@ def pretty_multi_contour(
         else:
             im = loc_ax.imshow(
                 data[:lim, :],
-                cmap=cm.viridis,
+                cmap=cmap,
                 interpolation=interp,
                 vmin=vmin,
                 vmax=vmax,
@@ -673,6 +694,8 @@ def pretty_multi_contour(
                     fontsize_label=fontsize,
                     fontsize_ticks=fontsize - 2,
                     fontname="serif",
+                    cbarticks=cbarticks,
+                    cbarticks_labels=cbarticks_labels,
                 )
             except:
                 print(cb_lab)
