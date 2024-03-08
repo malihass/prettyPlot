@@ -757,6 +757,8 @@ def pretty_multi_contour(
             fontname=fontname,
         )
 
+    return axs
+
 
 def snapVizZslice(field, x, y, figureDir, figureName, title=None):
     fig, ax = plt.subplots(1)
