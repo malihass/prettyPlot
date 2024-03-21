@@ -960,3 +960,41 @@ def plot_fromLatentToData(model, nSamples, xfeat=None, yfeat=None):
         title="Generated",
         ax=axes[1],
     )
+
+
+def plot_bar_names(params, val, title=None):
+    x = []
+    for i, name in enumerate(params):
+        x.append(i)
+    plt.bar(
+        x,
+        val,
+        width=0.8,
+        bottom=None,
+        align="center",
+        data=None,
+        tick_label=params,
+    )
+    fontsize = 16
+    if not title == None:
+        plt.title(
+            label_conv(title),
+            fontsize=fontsize,
+            fontweight="bold",
+            fontname="Times New Roman",
+        )
+    ax = plt.gca()
+    for tick in ax.xaxis.get_major_ticks():
+        tick.label1.set_fontsize(fontsize)
+        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontweight("bold")
+    for tick in ax.yaxis.get_major_ticks():
+        tick.label1.set_fontsize(fontsize)
+        tick.label1.set_fontname("Times New Roman")
+        tick.label1.set_fontweight("bold")
+    for axis in ["top", "bottom", "left", "right"]:
+        ax.spines[axis].set_linewidth(2)
+        ax.spines[axis].set_color("black")
+        # ax.spines[axis].set_zorder(0)
+    plt.grid(color="k", linestyle="-", linewidth=0.5)
+    plt.tight_layout()
