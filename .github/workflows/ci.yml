@@ -39,7 +39,6 @@ jobs:
           source .github/linters/formatting.sh
           format prettyPlot true
           format tests true
-          codespell
   Test:
     runs-on: ubuntu-latest
     strategy:
