@@ -998,3 +998,19 @@ def plot_bar_names(params, val, title=None):
         # ax.spines[axis].set_zorder(0)
     plt.grid(color="k", linestyle="-", linewidth=0.5)
     plt.tight_layout()
+
+
+def lighten_color(color, amount=0.5):
+    """
+    from https://stackoverflow.com/questions/37765197/darken-or-lighten-a-color-in-matplotlib/49601444#49601444
+    """
+    import colorsys
+
+    import matplotlib.colors as mc
+
+    try:
+        c = mc.cnames[color]
+    except:
+        c = color
+    c = colorsys.rgb_to_hls(*mc.to_rgb(c))
+    return colorsys.hls_to_rgb(c[0], 1 - amount * (1 - c[1]), c[2])
