@@ -39,7 +39,6 @@ jobs:
           source .github/linters/formatting.sh
           format prettyPlot true
           format tests true
-          codespell
   Test:
     runs-on: ubuntu-latest
     strategy:
@@ -61,5 +60,4 @@ jobs:
           python -m pip install pytest
       - name: Test
         run: |
-          #pytest -v 
-          python tests/test_basic.py -m pytest
+          pytest 
