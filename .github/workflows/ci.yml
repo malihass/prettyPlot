@@ -60,5 +60,4 @@ jobs:
           python -m pip install pytest
       - name: Test
         run: |
-          #pytest -v 
-          python tests/test_basic.py -m pytest
+          pytest 
