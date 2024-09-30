@@ -291,6 +291,8 @@ def pretty_bar_plot(
 ):
     if ylim is not None:
         assert len(ylim) == 2
+    if bar_color is not None:
+        assert len(bar_color) == len(yval)
 
     if xlabel2 is None and label:
         assert len(xlabel1) == len(yval)
@@ -497,13 +499,17 @@ def pretty_bar_plot(
                 )
 
         else:
-            for lab2, measurement in yval.items():
-                offset = width * multiplier
-                if xlabel2 is None:
-                    lab2 = None
-                if bar_color is None:
+            offset = width * multiplier
+            if bar_color is None:
+                for lab2, measurement in yval.items():
+                    if xlabel2 is None:
+                        lab2 = None
                     rects = ax.bar(x + offset, measurement, width, label=lab2)
-                else:
+                    multiplier += 1
+            else:
+                for (lab2, measurement), color in zip(yval.items(), bar_color):
+                    if xlabel2 is None:
+                        lab2 = None
                     rects = ax.bar(
                         x + offset,
                         measurement,
@@ -511,7 +517,7 @@ def pretty_bar_plot(
                         label=lab2,
                         color=bar_color,
                     )
-                multiplier += 1
+                    multiplier += 1
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
         if ylabel is None:
