@@ -805,15 +805,22 @@ def movieVizZslice(field, x, y, itime, movieDir, minVal=None, maxVal=None):
     return 0
 
 
-def make_movie(ntime, movieDir, movieName, prefix="im_"):
+def make_movie(ntime, movieDir, movieName, prefix="im_", indices=None):
     fig = plt.figure()
     # initiate an empty  list of "plotted" images
     myimages = []
-    # loops through available png:s
-    for i in range(ntime):
-        ## Read in picture
-        fname = movieDir + "/" + prefix + str(i) + ".png"
-        myimages.append(imageio.imread(fname))
+    # loops through available png
+    if indices is None:
+        for i in range(ntime):
+            ## Read in picture
+            fname = movieDir + "/" + prefix + str(i) + ".png"
+            myimages.append(imageio.imread(fname))
+    else:
+        for ind in indices:
+            ## Read in picture
+            fname = movieDir + "/" + prefix + str(ind) + ".png"
+            myimages.append(imageio.imread(fname))
+
     imageio.mimwrite(movieName, myimages, optimize=False)
     return
 
