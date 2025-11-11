@@ -602,7 +602,7 @@ def pretty_multi_contour(
         else:
             vmax = vmaxList[i_dat]
         if xbound is None:
-            xbound = [0, data_x[-1]]
+            xbound = [0, data_x.max()]
         if isinstance(ybound, float):
             ybound = [0, ybound]
         elif isinstance(ybound, int):
